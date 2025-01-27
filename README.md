@@ -40,9 +40,6 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 
 ### Frontend:
 - **React.js**
-- **CSS** (no Tailwind or external CSS frameworks used)
-- **Axios** for API requests (or a custom service layer)
-
 ---
 
 ## Installation and Setup
@@ -117,7 +114,7 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 - **Request Body**:
   ```json
   {
-    "email": "john.doe@example.com",
+    "email": "test@example.com",
     "password": "randomGeneratedPassword"
   }
   ```
@@ -225,7 +222,7 @@ This project is licensed under the MIT License.
 ## Walkthrough Video
 
 A Loom video walkthrough of the project has been recorded and is available at:
-[Insert Loom Video Link Here]
+Todo
 
 ---
 
