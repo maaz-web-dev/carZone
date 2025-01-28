@@ -21,13 +21,13 @@ exports.registerUser = async (req, res, next) => {
 
     const password = Math.random().toString(36).substring(2, 10);
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = new User({ name, email, password: hashedPassword });
-    await user.save();
+ 
 
     await sendWelcomeEmail(email, name, password);
 
     console.log(`User registration successful: ${email}`);
+    const user = new User({ name, email, password: hashedPassword });
+    await user.save();
     return res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
     console.error('Error during user registration:', err.message || err);

@@ -1,26 +1,36 @@
-import  { useState } from 'react';
-import { Box, TextField, Button, Typography, Card, CardContent, Alert, CircularProgress } from '@mui/material';
-import { login } from '../api/authService'; 
-import { useNavigate, Link } from 'react-router-dom'; 
+import { useState } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
+import { login } from "../api/authService";
+import { useNavigate, Link } from "react-router-dom";
 
 const SignIn = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-  const [serverError, setServerError] = useState('');
+  const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   // Validate form fields
   const validateForm = () => {
     const errors = {};
-    if (!formData.email.trim()) errors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Invalid email address';
-    if (!formData.password.trim()) errors.password = 'Password is required';
+    if (!formData.email.trim()) errors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      errors.email = "Invalid email address";
+    if (!formData.password.trim()) errors.password = "Password is required";
     return errors;
   };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: '' });
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleSubmit = async (e) => {
@@ -33,10 +43,13 @@ const SignIn = () => {
 
     try {
       setIsLoading(true);
-      const response = await login(formData); 
-      localStorage.setItem('userData', JSON.stringify({ token: response.token })); // Store token
-      setServerError('');
-      navigate('/dashboard');
+      const response = await login(formData);
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({ token: response.token })
+      ); // Store token
+      setServerError("");
+      navigate("/dashboard");
     } catch (err) {
       setServerError(err.message);
     } finally {
@@ -47,11 +60,11 @@ const SignIn = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        background: 'linear-gradient(135deg, #f5f7fa, #c3cfe2)',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        background: "linear-gradient(135deg, #f5f7fa, #c3cfe2)",
         padding: 2,
       }}
     >
@@ -82,7 +95,7 @@ const SignIn = () => {
               fullWidth
               margin="normal"
             />
-            <Box sx={{ position: 'relative', mt: 2 }}>
+            <Box sx={{ position: "relative", mt: 2 }}>
               <Button
                 type="submit"
                 variant="contained"
@@ -91,18 +104,18 @@ const SignIn = () => {
                 sx={{ py: 1.5 }}
                 disabled={isLoading}
               >
-                {isLoading ? 'Signing In...' : 'Sign In'}
+                {isLoading ? "Signing In..." : "Sign In"}
               </Button>
               {isLoading && (
                 <CircularProgress
                   size={24}
                   sx={{
-                    color: 'primary.main',
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    marginTop: '-12px',
-                    marginLeft: '-12px',
+                    color: "primary.main",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginTop: "-12px",
+                    marginLeft: "-12px",
                   }}
                 />
               )}
@@ -115,8 +128,11 @@ const SignIn = () => {
           )}
           {/* Sign-Up Link */}
           <Typography variant="body2" textAlign="center" sx={{ mt: 3 }}>
-            Don't have an account?{' '}
-            <Link to="/register" style={{ textDecoration: 'none', color: '#007bff' }}>
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              style={{ textDecoration: "none", color: "#007bff" }}
+            >
               Sign Up here
             </Link>
           </Typography>
