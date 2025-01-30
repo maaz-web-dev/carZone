@@ -5,7 +5,7 @@ import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/SignIn";
 import Signup from "./pages/Register";
 import Dashboard from "./component/Dashboard/Dashboard";
-import Categories from "./CategoryManagement/CategoryManagement";
+import Categories from "./component/CategoryManagement/CategoryManagement";
 import Cars from "./component/CarManagement/CarManagement";
 
 const App = () => {
@@ -20,7 +20,7 @@ const App = () => {
           element={
             // <ProtectedRoute>
               <MainLayout />
-            /* </ProtectedRoute>  */
+         /* </ProtectedRoute>  */
           }
         >
           <Route path="/dashboard" element={<Dashboard />} />

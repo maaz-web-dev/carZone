@@ -1,19 +1,33 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../component/contexts/AuthContext";
 
-const ProtectedRoute = () => {
-  const { user } = useAuth();
+import Sidebar from "../component/Sidebar/Sidebar";
+import { Outlet } from "react-router-dom";
 
-  // Check for authentication
-  if (!user) {
-    const storedUser = JSON.parse(localStorage.getItem("userData"));
-    if (!storedUser || !storedUser.token) {
-      return <Navigate to="/" />; s
-    }
-  }
+const MainLayout = () => {
+  console.log("MainLayout rendered");
 
- 
-  return <Outlet />;
+  return (
+    <div
+      style={{
+        display: "flex",
+        height: "100vh",
+      }}
+    >
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <div
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          padding: "20px",
+        }}
+      >
+    
+        <Outlet />
+      </div>
+    </div>
+  );
 };
 
-export default ProtectedRoute;
+export default MainLayout;
