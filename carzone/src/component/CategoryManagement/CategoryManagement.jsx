@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -49,7 +49,7 @@ const CategoryManagement = () => {
 
   // Open modal for adding or editing a category
   const handleOpenModal = (category = null) => {
-    setEditCategory(category); // If editing, pass category details
+    setEditCategory(category); 
     setModalOpen(true);
   };
 
@@ -57,7 +57,7 @@ const CategoryManagement = () => {
   const handleCloseModal = (refresh = false) => {
     setModalOpen(false);
     setEditCategory(null);
-    if (refresh) fetchCategories(); // Refresh categories if one was added/updated
+    if (refresh) fetchCategories(); 
   };
 
   return (
@@ -72,7 +72,7 @@ const CategoryManagement = () => {
         </Alert>
       )}
 
-      {/* Add New Category Button */}
+   
       <Button
         variant="contained"
         color="primary"
@@ -82,7 +82,6 @@ const CategoryManagement = () => {
         Add New Category
       </Button>
 
-      {/* Category List Table */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

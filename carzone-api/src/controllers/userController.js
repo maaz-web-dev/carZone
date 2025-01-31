@@ -54,12 +54,38 @@ exports.loginUser = async (req, res, next) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1m' });
+    const userName = user.name
     console.log(`Login successful for user: ${email}`);
-    return res.status(200).json({ token, message: 'Login successful' });
+    return res.status(200).json({ token, userName, message: 'Login successful' });
   } catch (err) {
     console.error('Error during login:', err.message || err);
+    next(err);
+  }
+};
+
+
+exports.updatePassword = async (req, res, next) => {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Old password is incorrect" });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error("Error updating password:", err);
     next(err);
   }
 };

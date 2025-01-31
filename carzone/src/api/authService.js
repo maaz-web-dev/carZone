@@ -13,3 +13,9 @@ export const register = (data) =>
     method: 'POST',
     body: JSON.stringify(data),
   }, false); 
+
+export const updatePassword = (data) =>
+  performFetch('/users/update-password', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }, false);

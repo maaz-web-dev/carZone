@@ -18,18 +18,19 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData) => {
-    localStorage.setItem('userData', JSON.stringify(userData));
-    setUser(userData);
+    localStorage.setItem("userData", JSON.stringify(userData));
+    setUser(userData); 
   };
+  
 
   const logout = () => {
     localStorage.removeItem('userData');
     setUser(null);
-    navigate('/login');
+    navigate('/');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user,setUser,login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

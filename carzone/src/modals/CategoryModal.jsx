@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
 import {
   Modal,
@@ -7,7 +7,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { createCategory } from "../api/categoryService";
+import { createCategory, updateCategory } from "../api/categoryService";
 const CategoryModal = ({ open, onClose, editCategory }) => {
   const [formData, setFormData] = useState({ name: "", description: "" });
 
@@ -27,11 +27,11 @@ const CategoryModal = ({ open, onClose, editCategory }) => {
   const handleSubmit = async () => {
     try {
       if (editCategory) {
-        await updateCategory(editCategory._id, formData); // Update
+        await updateCategory(editCategory._id, formData); 
       } else {
-        await createCategory(formData); // Add new
+        await createCategory(formData); 
       }
-      onClose(true); // Close modal and refresh data
+      onClose(true); 
     } catch (error) {
       console.error("Error saving category:", error);
     }

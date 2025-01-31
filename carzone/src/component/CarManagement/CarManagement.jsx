@@ -129,7 +129,6 @@ const CarManagement = () => {
         </Table>
       </TableContainer>
 
-      {/* Car Modal */}
       <CarModal open={modalOpen} onClose={handleCloseModal} editCar={editCar} />
     </Box>
   );

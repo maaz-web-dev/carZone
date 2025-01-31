@@ -9,7 +9,9 @@ const CarSchema = new mongoose.Schema(
     registrationNo: { type: String, required: true, unique: true },
     price: { type: Number, required: true },
     fuelType: { type: String, enum: ['Petrol', 'Diesel', 'Electric', 'Hybrid'], required: true },
-    mileage: { type: Number, required: true }, // in km/l or miles/gallon
+    mileage: { type: Number, required: true },
+    year: { type: String, required: true },
+    
   },
   { timestamps: true }
 );

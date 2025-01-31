@@ -10,7 +10,6 @@ exports.sendWelcomeEmail = async (email, name, password) => {
       },
     });
 
-    // Define email options
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -18,7 +17,7 @@ exports.sendWelcomeEmail = async (email, name, password) => {
       text: `Hi ${name},\n\nWelcome to CarZone! Your account has been successfully created. Your temporary password is: ${password}\n\nPlease log in and update your password immediately.\n\nThank you,\nCarZone Team`,
     };
 
-    // Send the email
+
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent:', info.response);
   } catch (err) {

@@ -1,17 +1,15 @@
-const app = require('./app'); // Import your Express app
-const mongoose = require('mongoose'); // Import Mongoose
-require('dotenv').config(); // Load environment variables
-
+const app = require('./app'); 
+const mongoose = require('mongoose'); 
+require('dotenv').config(); 
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    console.log('MongoDB connected'); // Log successful MongoDB connection
-    // Start the server
+    console.log('MongoDB connected'); 
     app.listen(process.env.PORT, () => {
-      console.log(`Server is running on http://localhost:${process.env.PORT}`); // Log server info
+      console.log(`Server is running on http://localhost:${process.env.PORT}`); 
     });
   })
   .catch((err) => {
-    console.error('Database connection error:', err); // Log DB connection error
+    console.error('Database connection error:', err); 
   });

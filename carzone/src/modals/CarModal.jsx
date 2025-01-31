@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types"; // Import PropTypes
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types"; 
 import {
   Modal,
   Box,
@@ -25,16 +25,17 @@ const CarModal = ({ open, onClose, editCar }) => {
     price: "",
     fuelType: "",
     mileage: "",
+    year: "", 
   });
-  const [categories, setCategories] = useState([]); // Store categories from API
+
+  const [categories, setCategories] = useState([]); 
   const [errorMessages, setErrorMessages] = useState([]);
 
-  // Fetch categories from API on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const data = await getAllCategories();
-        setCategories(data); // Store fetched categories
+        setCategories(data); 
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -43,7 +44,6 @@ const CarModal = ({ open, onClose, editCar }) => {
     fetchCategories();
   }, []);
 
-  // Fill form if editing
   useEffect(() => {
     if (editCar) {
       setFormData(editCar);
@@ -57,6 +57,7 @@ const CarModal = ({ open, onClose, editCar }) => {
         price: "",
         fuelType: "",
         mileage: "",
+        year: "",
       });
     }
   }, [editCar]);
@@ -67,11 +68,11 @@ const CarModal = ({ open, onClose, editCar }) => {
 
   const handleSubmit = async () => {
     try {
-      setErrorMessages([]); // Clear previous errors
+      setErrorMessages([]);
 
-      // Ensure price and mileage are numbers
-      if (isNaN(formData.price) || isNaN(formData.mileage)) {
-        setErrorMessages([{ path: "price", msg: "Price and Mileage must be numbers" }]);
+      
+      if (isNaN(formData.price) || isNaN(formData.mileage) || isNaN(formData.year)) {
+        setErrorMessages([{ path: "price", msg: "Price, Mileage, and Year must be numbers" }]);
         return;
       }
 
@@ -99,7 +100,7 @@ const CarModal = ({ open, onClose, editCar }) => {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 500, // Adjust width to reduce space
+          width: 500,
           bgcolor: "background.paper",
           boxShadow: 24,
           p: 3,
@@ -110,7 +111,6 @@ const CarModal = ({ open, onClose, editCar }) => {
           {editCar ? "Edit Car" : "Add New Car"}
         </Typography>
 
-        {/* Show validation errors */}
         {errorMessages.length > 0 && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {errorMessages.map((error, index) => (
@@ -119,16 +119,17 @@ const CarModal = ({ open, onClose, editCar }) => {
           </Alert>
         )}
 
-        {/* Grid Layout for Better Form Spacing */}
         <Grid container spacing={2}>
-          {/* Category Dropdown */}
           <Grid item xs={6}>
             <TextField
               select
               label="Category"
               name="category"
-              value={formData.category}
-              onChange={handleChange}
+              value={formData.category?._id || ""}
+              onChange={(e) => {
+                const selectedCategory = categories.find(cat => cat._id === e.target.value);
+                setFormData({ ...formData, category: selectedCategory || {} });
+              }}
               fullWidth
               required
             >
@@ -140,7 +141,6 @@ const CarModal = ({ open, onClose, editCar }) => {
             </TextField>
           </Grid>
 
-          {/* Color */}
           <Grid item xs={6}>
             <TextField
               label="Color"
@@ -152,7 +152,6 @@ const CarModal = ({ open, onClose, editCar }) => {
             />
           </Grid>
 
-          {/* Model */}
           <Grid item xs={6}>
             <TextField
               label="Model"
@@ -164,7 +163,6 @@ const CarModal = ({ open, onClose, editCar }) => {
             />
           </Grid>
 
-          {/* Make */}
           <Grid item xs={6}>
             <TextField
               label="Make"
@@ -176,7 +174,6 @@ const CarModal = ({ open, onClose, editCar }) => {
             />
           </Grid>
 
-          {/* Registration Number */}
           <Grid item xs={6}>
             <TextField
               label="Registration Number"
@@ -188,7 +185,6 @@ const CarModal = ({ open, onClose, editCar }) => {
             />
           </Grid>
 
-          {/* Price */}
           <Grid item xs={6}>
             <TextField
               label="Price"
@@ -201,7 +197,6 @@ const CarModal = ({ open, onClose, editCar }) => {
             />
           </Grid>
 
-          {/* Fuel Type Dropdown */}
           <Grid item xs={6}>
             <TextField
               select
@@ -220,13 +215,23 @@ const CarModal = ({ open, onClose, editCar }) => {
             </TextField>
           </Grid>
 
-          {/* Mileage */}
           <Grid item xs={6}>
             <TextField
               label="Mileage"
               name="mileage"
               type="number"
               value={formData.mileage}
+              onChange={handleChange}
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Year"
+              name="year"
+              type="number"
+              value={formData.year}
               onChange={handleChange}
               fullWidth
               required
@@ -250,7 +255,8 @@ const CarModal = ({ open, onClose, editCar }) => {
               !formData.registrationNo ||
               !formData.price ||
               !formData.fuelType ||
-              !formData.mileage
+              !formData.mileage ||
+              !formData.year
             }
           >
             {editCar ? "Update" : "Add"}
@@ -261,13 +267,11 @@ const CarModal = ({ open, onClose, editCar }) => {
   );
 };
 
-// ✅ Prop Validation
 CarModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   editCar: PropTypes.shape({
     _id: PropTypes.string,
-    category: PropTypes.string,
     color: PropTypes.string,
     model: PropTypes.string,
     make: PropTypes.string,
@@ -275,6 +279,7 @@ CarModal.propTypes = {
     price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     fuelType: PropTypes.string,
     mileage: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    year: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
 };
 

@@ -9,23 +9,28 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
-import { login } from "../api/authService";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../component/contexts/AuthContext";
-const SignIn = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+import { updatePassword } from "../../api/authService";
+
+const Settings = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    oldPassword: "",
+    newPassword: "",
+  });
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const {setUser} = useAuth();
-  const navigate = useNavigate();
-  // Validate form fields
+
   const validateForm = () => {
     const errors = {};
     if (!formData.email.trim()) errors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       errors.email = "Invalid email address";
-    if (!formData.password.trim()) errors.password = "Password is required";
+    if (!formData.oldPassword.trim()) errors.oldPassword = "Old password is required";
+    if (!formData.newPassword.trim()) errors.newPassword = "New password is required";
+    else if (formData.newPassword.length < 6)
+      errors.newPassword = "Password must be at least 6 characters long";
     return errors;
   };
 
@@ -41,23 +46,21 @@ const SignIn = () => {
       setErrors(validationErrors);
       return;
     }
-  
+
     try {
       setIsLoading(true);
-      const response = await login(formData);
-  
-      const userData = { token: response.token, name: response.userName };
-      localStorage.setItem("userData", JSON.stringify(userData)); 
-      setUser(userData); 
+      const response = await updatePassword(formData);
+      setSuccessMessage(response.message);
       setServerError("");
-      navigate("/dashboard");
+      setFormData({ email: "", oldPassword: "", newPassword: "" });
     } catch (err) {
-      setServerError(err.message);
+      setServerError(err.message || "An error occurred");
+      setSuccessMessage("");
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <Box
       sx={{
@@ -65,14 +68,12 @@ const SignIn = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        background: "linear-gradient(135deg, #f5f7fa, #c3cfe2)",
-        padding: 2,
       }}
     >
       <Card sx={{ width: 400, boxShadow: 3 }}>
         <CardContent>
           <Typography variant="h4" textAlign="center" mb={3}>
-            Sign In
+            Update Password
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -86,13 +87,24 @@ const SignIn = () => {
               margin="normal"
             />
             <TextField
-              label="Password"
-              name="password"
+              label="Old Password"
+              name="oldPassword"
               type="password"
-              value={formData.password}
+              value={formData.oldPassword}
               onChange={handleChange}
-              error={!!errors.password}
-              helperText={errors.password}
+              error={!!errors.oldPassword}
+              helperText={errors.oldPassword}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="New Password"
+              name="newPassword"
+              type="password"
+              value={formData.newPassword}
+              onChange={handleChange}
+              error={!!errors.newPassword}
+              helperText={errors.newPassword}
               fullWidth
               margin="normal"
             />
@@ -105,7 +117,7 @@ const SignIn = () => {
                 sx={{ py: 1.5 }}
                 disabled={isLoading}
               >
-                {isLoading ? "Signing In..." : "Sign In"}
+                {isLoading ? "Updating..." : "Update Password"}
               </Button>
               {isLoading && (
                 <CircularProgress
@@ -122,25 +134,20 @@ const SignIn = () => {
               )}
             </Box>
           </form>
+          {successMessage && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              {successMessage}
+            </Alert>
+          )}
           {serverError && (
             <Alert severity="error" sx={{ mt: 2 }}>
               {serverError}
             </Alert>
           )}
-          {/* Sign-Up Link */}
-          <Typography variant="body2" textAlign="center" sx={{ mt: 3 }}>
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              style={{ textDecoration: "none", color: "#007bff" }}
-            >
-              Sign Up here
-            </Link>
-          </Typography>
         </CardContent>
       </Card>
     </Box>
   );
 };
 
-export default SignIn;
+export default Settings;

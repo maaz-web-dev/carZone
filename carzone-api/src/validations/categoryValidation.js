@@ -1,4 +1,4 @@
-// middleware/categoryValidation.js
+
 const { body, validationResult } = require('express-validator');
 
 exports.validateCategory = [

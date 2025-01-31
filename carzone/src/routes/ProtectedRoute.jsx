@@ -1,17 +1,14 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../component/contexts/AuthContext';
+import { Navigate } from "react-router-dom";
+import MainLayout from "../layouts/MainLayout";
 
 const ProtectedRoute = () => {
-  const { user } = useAuth();
+  const storedUserData = JSON.parse(localStorage.getItem("userData"));
 
-  if (!user) {
-    const storedUserData = JSON.parse(localStorage.getItem('userData'));
-    if (!storedUserData?.token) {
-      return <Navigate to="/" />;
-    }
+  if (!storedUserData?.token) {
+    return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return <MainLayout />;
 };
 
 export default ProtectedRoute;

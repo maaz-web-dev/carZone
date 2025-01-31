@@ -12,10 +12,8 @@ const MainLayout = () => {
         height: "100vh",
       }}
     >
-      {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content */}
       <div
         style={{
           flex: 1,

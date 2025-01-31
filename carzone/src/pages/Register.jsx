@@ -1,6 +1,7 @@
 import  { useState } from 'react';
 import { Box, TextField, Button, Typography, Card, CardContent, Alert, CircularProgress } from '@mui/material';
 import { register } from '../api/authService';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '' });
@@ -121,6 +122,15 @@ const Register = () => {
               {serverError}
             </Alert>
           )}
+          <Typography variant="body2" textAlign="center" sx={{ mt: 3 }}>
+            Already have an account?{" "}
+            <Link
+              to="/"
+              style={{ textDecoration: "none", color: "#007bff" }}
+            >
+              Sign In here
+            </Link>
+          </Typography>
         </CardContent>
       </Card>
     </Box>

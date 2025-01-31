@@ -1,5 +1,10 @@
 import performFetch from './api';
 
+export const getCategoryCount = async () => {
+  const response = await performFetch('/categories/count');
+  return response || 0;
+};
+
 // Get all categories
 export const getAllCategories = () => performFetch('/categories');
 

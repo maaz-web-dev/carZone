@@ -1,25 +1,33 @@
 import { Avatar, Typography, Box, List, ListItem, ListItemIcon, ListItemText, Divider } from '@mui/material';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CategoryIcon from '@mui/icons-material/Category';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';  
 import LogoutIcon from '@mui/icons-material/Logout';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useAuth } from '../contexts/AuthContext';
+import { useEffect, useState } from 'react';
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [currentUser, setCurrentUser] = useState(user); 
+
+  useEffect(() => {
+    setCurrentUser(user); 
+  }, [user]);
 
   const sidebarItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
     { text: "Category Management", icon: <CategoryIcon />, path: "/categories" },
     { text: "Car Management", icon: <DirectionsCarIcon />, path: "/cars" },
-    { text: "Add New Car", icon: <AddCircleOutlineIcon />, path: "/add-car" },
+    { text: "Update Password", icon: <SettingsIcon />, path: "/settings" },
   ];
 
   const handleLogout = () => {
     logout();
+    navigate("/");
   };
 
   return (
@@ -33,7 +41,6 @@ const Sidebar = () => {
         color: '#FFFFFF', 
       }}
     >
-      {/* Header Section */}
       <Box
         sx={{
           bgcolor: '#283593', 
@@ -54,20 +61,13 @@ const Sidebar = () => {
             border: '2px solid #FFFFFF',
           }}
         />
-        {user ? (
-          <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
-            {user.name || 'Admin'}
-          </Typography>
-        ) : (
-          <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
-            Loading...
-          </Typography>
-        )}
+        <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
+          {currentUser?.name || 'Admin'}
+        </Typography>
       </Box>
 
       <Divider />
 
-      {/* Sidebar Items */}
       <List>
         {sidebarItems.map((item, index) => (
           <ListItem
@@ -90,12 +90,10 @@ const Sidebar = () => {
         ))}
       </List>
 
-      {/* Spacer */}
       <Box sx={{ flexGrow: 1 }} />
 
       <Divider />
 
-      {/* Logout Button */}
       <List>
         <ListItem button onClick={handleLogout}>
           <ListItemIcon>
