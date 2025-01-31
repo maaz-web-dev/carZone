@@ -1,3 +1,4 @@
+
 # CarZone API and Frontend
 
 CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides APIs and a frontend interface for managing user registration, login, categories, and cars. The system includes CRUD operations for categories and cars, JWT-based authentication, XSS protection, and email integration for user registration.
@@ -135,7 +136,6 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
   {
     "name": "Sedan",
     "description": "A small passenger car",
-    "isActive": true
   }
   ```
 
@@ -148,8 +148,7 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
   ```json
   {
     "name": "Luxury Sedan",
-    "description": "A premium passenger car",
-    "isActive": false
+    "description": "A premium passenger car"
   }
   ```
 
@@ -170,9 +169,32 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
     "registrationNo": "ABC-123",
     "price": 25000,
     "fuelType": "Petrol",
-    "mileage": 15.5
+    "mileage": 15.5,
+    "year": "2023"
   }
   ```
+
+#### **Car Model Schema**:
+```javascript
+const mongoose = require('mongoose');
+
+const CarSchema = new mongoose.Schema(
+  {
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    color: { type: String, required: true },
+    model: { type: String, required: true },
+    make: { type: String, required: true },
+    registrationNo: { type: String, required: true, unique: true },
+    price: { type: Number, required: true },
+    fuelType: { type: String, enum: ['Petrol', 'Diesel', 'Electric', 'Hybrid'], required: true },
+    mileage: { type: Number, required: true },
+    year: { type: String, required: true },
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model('Car', CarSchema);
+```
 
 #### **Get All Cars**
 - **Endpoint**: `GET /api/cars`
@@ -186,9 +208,15 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 - **Request Body**:
   ```json
   {
-    "color": "Blue",
-    "price": 27000,
-    "mileage": 16.5
+    "category": "category_id",
+    "color": "Red",
+    "model": "2023",
+    "make": "Toyota",
+    "registrationNo": "ABC-123",
+    "price": 25000,
+    "fuelType": "Petrol",
+    "mileage": 15.5,
+    "year": "2023"
   }
   ```
 
@@ -230,4 +258,3 @@ Todo
 
 For any questions, reach out to:
 - **Email**: maazkhaansofteng@gmail.com
-
