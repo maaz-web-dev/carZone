@@ -1,5 +1,5 @@
 const Category = require('../models/Category');
-const logActivity = require('./utils/logActivity');
+const logActivity = require('../utils/logActivity');
 
 // Create a new category
 exports.createCategory = async (req, res, next) => {

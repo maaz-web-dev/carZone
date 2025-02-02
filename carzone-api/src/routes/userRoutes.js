@@ -3,7 +3,6 @@ const { registerUser, loginUser, updatePassword } = require('../controllers/user
 const router = express.Router();
 
 router.post('/register', registerUser);
-console.log("testrwe");
 router.post('/login', loginUser);
 router.post('/update-password', updatePassword);
 

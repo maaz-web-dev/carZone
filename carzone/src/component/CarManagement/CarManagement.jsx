@@ -32,7 +32,6 @@ const CarManagement = () => {
   const [isLoading, setIsLoading] = useState(false); 
   const [deleteCarId, setDeleteCarId] = useState(null); 
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false); 
-  const [addConfirmationDialogOpen, setAddConfirmationDialogOpen] = useState(false); 
   const limit = 5;
 
   useEffect(() => {
@@ -93,17 +92,6 @@ const CarManagement = () => {
     setConfirmationDialogOpen(false); 
   };
 
-  const handleOpenAddDialog = () => {
-    setAddConfirmationDialogOpen(true); 
-  };
-
-  const handleCloseAddDialog = (confirm = false) => {
-    if (confirm) {
-      setModalOpen(true);
-    }
-    setAddConfirmationDialogOpen(false); 
-  };
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -120,7 +108,7 @@ const CarManagement = () => {
         variant="contained"
         color="primary"
         sx={{ mb: 2 }}
-        onClick={handleOpenAddDialog} 
+        onClick={() => handleOpenModal()}
       >
         Add New Car
       </Button>
@@ -201,28 +189,6 @@ const CarManagement = () => {
           </Button>
           <Button onClick={handleDelete} color="secondary">
             Confirm Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={addConfirmationDialogOpen}
-        onClose={() => handleCloseAddDialog(false)}
-        aria-labelledby="add-car-dialog-title"
-        aria-describedby="add-car-dialog-description"
-      >
-        <DialogTitle id="add-car-dialog-title">Confirm Add Car</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1">
-            Are you sure you want to add a new car?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleCloseAddDialog(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={() => handleCloseAddDialog(true)} color="secondary">
-            Confirm Add
           </Button>
         </DialogActions>
       </Dialog>

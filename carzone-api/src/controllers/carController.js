@@ -1,5 +1,5 @@
 const Car = require("../models/car");
-const logActivity = require("./utils/logActivity");
+const logActivity = require("../utils/logActivity");
 
 // Create a new car
 exports.createCar = async (req, res, next) => {

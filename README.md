@@ -7,7 +7,7 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 ## Features
 
 ### User Registration and Login
-- Users can register using their name and email.
+- Users can sign up with their name and email.
 - A welcome email is sent with a randomly generated password.
 - Users can log in using their email and password.
 - Passwords can be updated after login.
@@ -87,7 +87,7 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 1. Clone the frontend repository:
    ```bash
    git clone https://github.com/your-repo/carzone-frontend.git
-   cd carzone-frontend
+   cd carzone
    ```
 2. Install dependencies:
    ```bash

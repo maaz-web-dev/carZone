@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types"; // Import PropTypes
+import PropTypes from "prop-types";
 import {
   Modal,
   Box,
@@ -11,7 +11,6 @@ import { createCategory, updateCategory } from "../api/categoryService";
 const CategoryModal = ({ open, onClose, editCategory }) => {
   const [formData, setFormData] = useState({ name: "", description: "" });
 
-  // Fill form if editing
   useEffect(() => {
     if (editCategory) {
       setFormData(editCategory);
@@ -91,15 +90,15 @@ const CategoryModal = ({ open, onClose, editCategory }) => {
   );
 };
 
-// ✅ Prop Validation
+
 CategoryModal.propTypes = {
-  open: PropTypes.bool.isRequired, // Must be a boolean
-  onClose: PropTypes.func.isRequired, // Must be a function
+  open: PropTypes.bool.isRequired, 
+  onClose: PropTypes.func.isRequired, 
   editCategory: PropTypes.shape({
     _id: PropTypes.string,
     name: PropTypes.string,
     description: PropTypes.string,
-  }), // editCategory is optional but must match this shape if provided
+  }), 
 };
 
 export default CategoryModal;
