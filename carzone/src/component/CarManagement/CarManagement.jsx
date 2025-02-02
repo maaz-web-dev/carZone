@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -11,6 +11,13 @@ import {
   TableRow,
   Paper,
   Alert,
+  Pagination,
+  Backdrop,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import { getAllCars, deleteCar } from "../../api/carService";
 import CarModal from "../../modals/CarModal";
@@ -19,45 +26,82 @@ const CarManagement = () => {
   const [cars, setCars] = useState([]);
   const [error, setError] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [editCar, setEditCar] = useState(null); // Store car data when editing
+  const [editCar, setEditCar] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false); 
+  const [deleteCarId, setDeleteCarId] = useState(null); 
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false); 
+  const [addConfirmationDialogOpen, setAddConfirmationDialogOpen] = useState(false); 
+  const limit = 5;
 
   useEffect(() => {
-    fetchCars();
-  }, []);
+    fetchCars(page);
+  }, [page]);
 
-  const fetchCars = async () => {
+  const fetchCars = async (page) => {
+    setIsLoading(true); 
     try {
-      const data = await getAllCars();
-      setCars(data);
+      const data = await getAllCars(page, limit);
+      setCars(data.cars || []);
+      setTotalPages(data.pagination?.totalPages || 1);
       setError("");
     } catch (error) {
-      console.error("Error fetching cars:", error);
       setError(error.message || "Failed to load cars.");
+    } finally {
+      setIsLoading(false); 
     }
   };
 
-  // Delete a car
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
+    setIsLoading(true);
     try {
-      await deleteCar(id);
-      setCars((prev) => prev.filter((car) => car._id !== id));
+      await deleteCar(deleteCarId); 
+      await fetchCars(page);
+      setConfirmationDialogOpen(false); 
+      setDeleteCarId(null); 
     } catch (error) {
-      console.error("Error deleting car:", error);
       setError(error.message || "Failed to delete car.");
+      setConfirmationDialogOpen(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Open modal for adding or editing a car
   const handleOpenModal = (car = null) => {
-    setEditCar(car); // If editing, pass car details
+    setEditCar(car);
     setModalOpen(true);
   };
 
-  // Close modal and refresh list
-  const handleCloseModal = (refresh = false) => {
+  const handleCloseModal = async (refresh = false) => {
     setModalOpen(false);
     setEditCar(null);
-    if (refresh) fetchCars(); // Refresh cars if a car was added/updated
+    if (refresh) {
+      setIsLoading(true); 
+      await fetchCars(page);
+      setIsLoading(false); 
+    }
+  };
+
+  const handleOpenDeleteDialog = (carId) => {
+    setDeleteCarId(carId); 
+    setConfirmationDialogOpen(true); 
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteCarId(null); 
+    setConfirmationDialogOpen(false); 
+  };
+
+  const handleOpenAddDialog = () => {
+    setAddConfirmationDialogOpen(true); 
+  };
+
+  const handleCloseAddDialog = (confirm = false) => {
+    if (confirm) {
+      setModalOpen(true);
+    }
+    setAddConfirmationDialogOpen(false); 
   };
 
   return (
@@ -72,17 +116,15 @@ const CarManagement = () => {
         </Alert>
       )}
 
-      {/* Add New Car Button */}
       <Button
         variant="contained"
         color="primary"
         sx={{ mb: 2 }}
-        onClick={() => handleOpenModal()}
+        onClick={handleOpenAddDialog} 
       >
         Add New Car
       </Button>
 
-      {/* Car List Table */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -101,17 +143,13 @@ const CarManagement = () => {
                   <TableCell>{car.model}</TableCell>
                   <TableCell>{car.year}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="outlined"
-                      sx={{ mr: 1 }}
-                      onClick={() => handleOpenModal(car)}
-                    >
+                    <Button variant="outlined" sx={{ mr: 1 }} onClick={() => handleOpenModal(car)}>
                       Edit
                     </Button>
                     <Button
                       variant="outlined"
                       color="secondary"
-                      onClick={() => handleDelete(car._id)}
+                      onClick={() => handleOpenDeleteDialog(car._id)}
                     >
                       Delete
                     </Button>
@@ -129,7 +167,65 @@ const CarManagement = () => {
         </Table>
       </TableContainer>
 
+      <Box display="flex" justifyContent="center" mt={2}>
+        <Pagination
+          count={totalPages}
+          page={page}
+          onChange={(event, value) => setPage(value)}
+          color="primary"
+          disabled={totalPages <= 1}
+        />
+      </Box>
+
       <CarModal open={modalOpen} onClose={handleCloseModal} editCar={editCar} />
+
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isLoading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
+      <Dialog
+        open={confirmationDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        aria-labelledby="confirmation-dialog-title"
+        aria-describedby="confirmation-dialog-description"
+      >
+        <DialogTitle id="confirmation-dialog-title">Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Are you sure you want to delete this car?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="secondary">
+            Confirm Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={addConfirmationDialogOpen}
+        onClose={() => handleCloseAddDialog(false)}
+        aria-labelledby="add-car-dialog-title"
+        aria-describedby="add-car-dialog-description"
+      >
+        <DialogTitle id="add-car-dialog-title">Confirm Add Car</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Are you sure you want to add a new car?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCloseAddDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleCloseAddDialog(true)} color="secondary">
+            Confirm Add
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

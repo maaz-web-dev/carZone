@@ -28,10 +28,28 @@ exports.createCategory = async (req, res, next) => {
 // Get all categories
 exports.getCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find();
-    res.status(200).json(categories);
+    console.log("Fetching categories process started...");
+
+    const { page = 1, limit = 10, sort = "createdAt" } = req.query;
+
+    const categories = await Category.find()
+      .sort(sort)
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const totalCategories = await Category.countDocuments();
+
+    console.log("Fetching categories process completed.");
+    res.status(200).json({
+      categories,
+      pagination: {
+        total: totalCategories,
+        currentPage: Number(page),
+        totalPages: Math.ceil(totalCategories / limit),
+      },
+    });
   } catch (err) {
-    console.error('Error fetching categories:', err);
+    console.error("Error fetching categories:", err);
     next(err);
   }
 };

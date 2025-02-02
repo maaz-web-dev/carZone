@@ -5,8 +5,14 @@ export const getCategoryCount = async () => {
   return response || 0;
 };
 
-// Get all categories
-export const getAllCategories = () => performFetch('/categories');
+export const getAllCategories = async (page = 1, limit = 10, sort = "createdAt") => {
+  try {
+    const response = await performFetch(`/categories?page=${page}&limit=${limit}&sort=${sort}`);
+    return response; 
+  } catch (error) {
+    throw new Error(error.message || "Failed to fetch categories");
+  }
+};
 
 // Create a new category
 export const createCategory = (data) => performFetch('/categories', {

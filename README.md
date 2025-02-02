@@ -1,4 +1,3 @@
-
 # CarZone API and Frontend
 
 CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides APIs and a frontend interface for managing user registration, login, categories, and cars. The system includes CRUD operations for categories and cars, JWT-based authentication, XSS protection, and email integration for user registration.
@@ -7,26 +6,35 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 
 ## Features
 
-- **User Registration and Login**:
-  - Users can sign up with their name and email.
-  - A welcome email is sent with a randomly generated password.
-  - Users can log in using their email and password.
+### User Registration and Login
+- Users can register using their name and email.
+- A welcome email is sent with a randomly generated password.
+- Users can log in using their email and password.
+- Passwords can be updated after login.
 
-- **Dashboard**:
-  - Displays the total number of registered cars in the system.
+### Dashboard
+- Displays the total number of registered categories and cars.
+- Shows recent activity logs.
 
-- **CRUD Operations**:
-  - **Categories**: Add, view, update, and delete categories (e.g., Sedan, SUV, Hatchback).
-  - **Cars**: Add, view, update, and delete cars, with attributes like color, model, make, registration number, price, fuel type, and mileage.
+### CRUD Operations
+- **Categories**:
+  - Add, view, update, and delete categories (e.g., Sedan, SUV, Hatchback).
+  - Supports pagination and sorting.
+- **Cars**:
+  - Add, view, update, and delete cars.
+  - Attributes include category, color, model, make, registration number, price, fuel type, mileage, and year.
+  - Supports pagination and sorting.
 
-- **Security**:
-  - JWT-based authentication for route protection.
-  - XSS protection for input data.
+### Security
+- JWT-based authentication for route protection.
+- XSS protection through input validation.
+- Client-side and server-side validation.
 
-- **Frontend**:
-  - Responsive sign-in and sign-up pages.
-  - A dashboard for managing cars and categories.
-  - Data tables for sorting and pagination.
+### Frontend
+- Uses **Material UI (MUI)** for UI components.
+- Responsive sign-in and sign-up pages.
+- Dashboard for managing cars and categories.
+- Data tables with sorting and pagination.
 
 ---
 
@@ -35,12 +43,14 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 ### Backend:
 - **Node.js**
 - **Express.js**
-- **MongoDB** (Mongoose)
-- **JWT** (jsonwebtoken)
+- **MongoDB (Mongoose)**
+- **JWT (jsonwebtoken)**
 - **Nodemailer** for email integration
 
 ### Frontend:
 - **React.js**
+- **Material UI (MUI)**
+
 ---
 
 ## Installation and Setup
@@ -74,9 +84,10 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
    The server will run at `http://localhost:5000`.
 
 ### Frontend Setup
-1. Navigate to the frontend folder (if in a monorepo):
+1. Clone the frontend repository:
    ```bash
-   cd ../carzone-frontend
+   git clone https://github.com/your-repo/carzone-frontend.git
+   cd carzone-frontend
    ```
 2. Install dependencies:
    ```bash
@@ -84,9 +95,11 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
    ```
 3. Start the frontend:
    ```bash
-   npm start
+   npm run dev
    ```
    The frontend will run at `http://localhost:3000`.
+
+Both the backend and frontend can be run using `npm run dev` in their respective directories.
 
 ---
 
@@ -94,7 +107,7 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 
 ### Authentication
 
-#### **Register User**
+#### Register User
 - **Endpoint**: `POST /api/users/register`
 - **Request Body**:
   ```json
@@ -110,7 +123,7 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
   }
   ```
 
-#### **Login User**
+#### Login User
 - **Endpoint**: `POST /api/users/login`
 - **Request Body**:
   ```json
@@ -129,20 +142,20 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 
 ### Categories
 
-#### **Create Category**
+#### Create Category
 - **Endpoint**: `POST /api/categories`
 - **Request Body**:
   ```json
   {
     "name": "Sedan",
-    "description": "A small passenger car",
+    "description": "A small passenger car"
   }
   ```
 
-#### **Get All Categories**
-- **Endpoint**: `GET /api/categories`
+#### Get All Categories
+- **Endpoint**: `GET /api/categories?page=1&limit=10&sort=name`
 
-#### **Update Category**
+#### Update Category
 - **Endpoint**: `PUT /api/categories/:id`
 - **Request Body**:
   ```json
@@ -152,12 +165,12 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
   }
   ```
 
-#### **Delete Category**
+#### Delete Category
 - **Endpoint**: `DELETE /api/categories/:id`
 
 ### Cars
 
-#### **Create Car**
+#### Create Car
 - **Endpoint**: `POST /api/cars`
 - **Request Body**:
   ```json
@@ -166,44 +179,18 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
     "color": "Red",
     "model": "2023",
     "make": "Toyota",
-    "registrationNo": "ABC-123",
+    "registrationNo": "ABC-100",
     "price": 25000,
     "fuelType": "Petrol",
     "mileage": 15.5,
-    "year": "2023"
+    "year": 2001
   }
   ```
 
-#### **Car Model Schema**:
-```javascript
-const mongoose = require('mongoose');
+#### Get All Cars
+- **Endpoint**: `GET /api/cars?page=1&limit=10&sort=price`
 
-const CarSchema = new mongoose.Schema(
-  {
-    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
-    color: { type: String, required: true },
-    model: { type: String, required: true },
-    make: { type: String, required: true },
-    registrationNo: { type: String, required: true, unique: true },
-    price: { type: Number, required: true },
-    fuelType: { type: String, enum: ['Petrol', 'Diesel', 'Electric', 'Hybrid'], required: true },
-    mileage: { type: Number, required: true },
-    year: { type: String, required: true },
-  },
-  { timestamps: true }
-);
-
-module.exports = mongoose.model('Car', CarSchema);
-```
-
-#### **Get All Cars**
-- **Endpoint**: `GET /api/cars`
-- **Query Parameters**:
-  - `page` (optional): Page number
-  - `limit` (optional): Number of items per page
-  - `sort` (optional): Field to sort by (e.g., `price`)
-
-#### **Update Car**
+#### Update Car
 - **Endpoint**: `PUT /api/cars/:id`
 - **Request Body**:
   ```json
@@ -220,10 +207,10 @@ module.exports = mongoose.model('Car', CarSchema);
   }
   ```
 
-#### **Delete Car**
+#### Delete Car
 - **Endpoint**: `DELETE /api/cars/:id`
 
-#### **Get Car Count**
+#### Get Car Count
 - **Endpoint**: `GET /api/cars/count`
 
 ---
@@ -250,7 +237,7 @@ This project is licensed under the MIT License.
 ## Walkthrough Video
 
 A Loom video walkthrough of the project has been recorded and is available at:
-Todo
+_To be added_
 
 ---
 

@@ -35,7 +35,7 @@ const CarModal = ({ open, onClose, editCar }) => {
     const fetchCategories = async () => {
       try {
         const data = await getAllCategories();
-        setCategories(data); 
+        setCategories(data?.categories); 
       } catch (error) {
         console.error("Error fetching categories:", error);
       }

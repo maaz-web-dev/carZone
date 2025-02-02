@@ -3,7 +3,7 @@ import performFetch from './api';
 // Get all cars with pagination and sorting
 export const getAllCars = async (page = 1, limit = 10, sort = 'createdAt') => {
   const response = await performFetch(`/cars?page=${page}&limit=${limit}&sort=${sort}`);
-  return response.cars || []; 
+  return response || []; 
 };
 
 // Get car count
