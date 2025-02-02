@@ -87,7 +87,7 @@ CarZone is a MERN (MongoDB, Express, React, Node.js) stack project that provides
 1. Clone the frontend repository:
    ```bash
    git clone https://github.com/your-repo/carzone-frontend.git
-   cd carzone-frontend
+   cd carzone
    ```
 2. Install dependencies:
    ```bash
