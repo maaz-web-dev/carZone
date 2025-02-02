@@ -237,7 +237,9 @@ This project is licensed under the MIT License.
 ## Walkthrough Video
 
 A Loom video walkthrough of the project has been recorded and is available at:
-_To be added_
+API  :https://www.loom.com/share/22224f5372064075ba6de761bc1d5e33
+UI  : https://www.loom.com/share/8b9519a6c402455d8b3c3fca9c0f5dc9
+
 
 ---
 
